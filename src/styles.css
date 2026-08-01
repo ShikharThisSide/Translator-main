@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap");
 
 :root { font-family: Inter, sans-serif; color: #050505; background: #fff; font-synthesis: none; }
 * { box-sizing: border-box; }
@@ -6,7 +6,7 @@ html, body, #root { margin: 0; min-height: 100%; }
 html { scroll-behavior: smooth; }
 body { min-width: 320px; }
 button, a { font: inherit; -webkit-tap-highlight-color: transparent; }
-.page { min-height: 100vh; position: relative; display: flex; flex-direction: column; justify-content: space-between; overflow-x: hidden; background: transparent; }
+.page { min-height: 100vh; position: relative; display: flex; flex-direction: column; justify-content: space-between; overflow-x: hidden; background: transparent; scroll-snap-type: y mandatory; scroll-padding-top: 76px; }
 .video-wrap { position: fixed; z-index: 1; inset: 0; overflow: hidden; background: #fff; pointer-events: none; }
 .video-wrap video { width: 100%; height: 100%; display: block; object-fit: cover; }
 .top-nav { position: fixed; z-index: 50; top: 18px; left: 0; right: 0; width: min(1280px, calc(100% - 120px)); margin: 0 auto; display: flex; align-items: center; gap: 12px; pointer-events: none; }
@@ -29,7 +29,7 @@ button, a { font: inherit; -webkit-tap-highlight-color: transparent; }
 .adaptive-pill { gap: 8px; padding: 3px 12px 3px 4px; color: rgba(0,0,0,.7); }
 .grid-circle { width: 26px; height: 26px; color: white; background: #050505; }
 .grid-circle svg { width: 13px; height: 13px; fill: currentColor; }
-.footer { position: relative; z-index: 30; min-height: 48vh; margin-top: auto; padding: 190px 16px 28px; display: flex; flex-direction: column; justify-content: flex-end; gap: 28px; background: linear-gradient(to top, #fff 0%, rgba(255,255,255,.5) 28%, rgba(255,255,255,.12) 55%, transparent 78%); }
+.footer { position: relative; z-index: 30; min-height: 100vh; margin-top: auto; padding: 190px 16px 28px; display: flex; flex-direction: column; justify-content: flex-end; gap: 28px; scroll-snap-align: start; scroll-snap-stop: always; background: linear-gradient(to top, #fff 0%, rgba(255,255,255,.5) 28%, rgba(255,255,255,.12) 55%, transparent 78%); }
 .subtitle { gap: 8px; color: rgba(0,0,0,.55); font-size: 13px; }
 .subtitle i { width: 8px; height: 8px; border-radius: 50%; background: #050505; }
 h1 { margin: 10px 0 20px; font-size: clamp(2rem, 8vw, 4.5rem); font-weight: 300; letter-spacing: -.03em; line-height: 1; }
@@ -100,8 +100,8 @@ h1 { margin: 10px 0 20px; font-size: clamp(2rem, 8vw, 4.5rem); font-weight: 300;
 .outline-cta span { margin-left: 8px; }
 @media (max-width: 700px) { .detail-section { padding: 100px 20px; } .detail-copy { display: block; margin-bottom: 42px; } .detail-copy p { margin-top: 24px; } .capability-grid { grid-template-columns: 1fr; } .model-grid { grid-template-columns: 1fr; gap: 42px; } .model-list div { grid-template-columns: 1fr; gap: 8px; } .workflow-line { display: grid; grid-template-columns: 1fr; gap: 18px; margin-top: 55px; } .workflow-line i { width: 100%; } }
 .story { position: relative; z-index: 2; color: #f5f6f4; background: linear-gradient(to bottom, #fff 0, #dfe3e0 55px, #202725 150px, #07090c 280px); }
-.story-block { min-height: 100vh; padding: 150px max(24px, 8vw); display: flex; flex-direction: column; justify-content: center; border-bottom: 1px solid rgba(255,255,255,.1); overflow: hidden; }
-.story-block:not(.universe) { color: #111; background: #f3f4f1; border-bottom-color: rgba(0,0,0,.1); }
+.story-block { min-height: 100vh; padding: 150px max(24px, 8vw); display: flex; flex-direction: column; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always; border-bottom: 0; overflow: hidden; }
+.story-block:not(.universe) { color: #111; background: #f3f4f1; border-bottom: 0; }
 .story-block.why { background: linear-gradient(to bottom, #07090c 0%, #202725 7%, #69736e 15%, #cbd1cd 24%, #f3f4f1 34%); }
 .story-block.why { position: relative; isolation: isolate; }
 .story-block.why::after { content: ""; position: absolute; right: 10%; top: 42%; width: 360px; height: 360px; border-radius: 50%; background: radial-gradient(circle, rgba(140,255,193,.18), transparent 68%); filter: blur(18px); pointer-events: none; z-index: -1; }
@@ -109,6 +109,7 @@ h1 { margin: 10px 0 20px; font-size: clamp(2rem, 8vw, 4.5rem); font-weight: 300;
 .story-block.why h2 { max-width: 760px; font-size: clamp(3.6rem, 7.2vw, 7.2rem); line-height: .86; text-wrap: balance; }
 .story-block.why h2 em { background: linear-gradient(105deg, #8b9790 12%, #477b60 52%, #9aa69f 92%, #477b60 130%); background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: text-shimmer 7s linear infinite; }
 .story-block.why p { max-width: 390px; padding-left: 16px; border-left: 2px solid rgba(71,123,96,.45); }
+.story-block.why .scenario-row { display: none; }
 .story-block.why .scenario-row span { transition: transform .35s cubic-bezier(.16,1,.3,1), background .35s ease, color .35s ease; }
 .story-block.why .scenario-row span:hover { transform: translateY(-7px) rotate(-2deg); color: #f3f4f1; background: #477b60; border-color: #477b60; }
 @keyframes orbit-pulse { 0%, 100% { transform: scale(.94) rotate(0deg); opacity: .55; } 50% { transform: scale(1.04) rotate(12deg); opacity: 1; } }
@@ -128,7 +129,7 @@ h1 { margin: 10px 0 20px; font-size: clamp(2rem, 8vw, 4.5rem); font-weight: 300;
 .story-block:not(.universe) .ocr-flow span, .story-block:not(.universe) .context-grid div { border-color: rgba(0,0,0,.14); }
 .story-block:not(.universe) .context-grid span { color: #477b60; }
 .story-block small { color: #8cffc1; font-size: 11px; letter-spacing: .16em; }
-.story-block h2 { max-width: 900px; margin: 26px 0; font-family: "Space Grotesk", Inter, sans-serif; font-size: clamp(3rem, 8vw, 8rem); font-weight: 300; letter-spacing: -.07em; line-height: .9; }
+.story-block h2 { max-width: 900px; margin: 26px 0; font-family: "Pixelify Sans", "Space Grotesk", sans-serif; font-size: clamp(3rem, 8vw, 8rem); font-weight: 600; letter-spacing: -.045em; line-height: .9; }
 .story-block h2 em { color: #65706b; font-style: normal; }
 .story-block p { max-width: 440px; color: #9ca8a2; font-size: 14px; line-height: 1.6; }
 .universe { position: relative; min-height: 95vh; background: radial-gradient(circle at center, rgba(140,255,193,.1), transparent 38%), transparent; }
