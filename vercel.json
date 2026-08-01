@@ -5,7 +5,8 @@
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "rewrites": [
-    { "source": "/translator", "destination": "/index.html" }
+    { "source": "/translator", "destination": "/index.html" },
+    { "source": "/features", "destination": "/index.html" }
   ],
   "functions": {
     "api/**/*.js": {
