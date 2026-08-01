@@ -1,0 +1,17 @@
+.auth-page{background:radial-gradient(circle at 50% -10%,#dff5e9 0,#f8f8fb 42%,#edf4ef 100%)}
+.auth-page::before{width:48vw;height:90vh;filter:blur(55px);opacity:.8}
+.auth-page::after{width:38vw;height:65vh;filter:blur(65px);opacity:.65}
+.auth-shell{min-height:min(780px,90vh);border-radius:28px;box-shadow:0 34px 110px rgba(36,69,51,.2),inset 0 1px rgba(255,255,255,.95)}
+.auth-shell:hover{transform:translateY(-10px) perspective(1200px) rotateX(.4deg);box-shadow:0 48px 130px rgba(36,69,51,.28),inset 0 1px rgba(255,255,255,.98)}
+.auth-visual{min-height:700px;background:linear-gradient(145deg,rgba(255,255,255,.64),rgba(255,255,255,.1)),linear-gradient(155deg,#effbf4 0%,#a6d9bb 36%,#397e5d 63%,#dff4e7 100%)}
+.auth-visual::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 18%,rgba(255,255,255,.85),transparent 22%),radial-gradient(circle at 80% 80%,rgba(255,255,255,.3),transparent 28%);pointer-events:none}
+.auth-form-wrap{padding:72px 11%;background:rgba(255,255,255,.5)}
+.auth-form h2{font-size:clamp(3.2rem,5vw,5.4rem);letter-spacing:-.075em;line-height:.9}
+.auth-form form{gap:13px;margin-top:36px}
+.auth-form input:not([type=checkbox]){padding:19px 20px;border-radius:12px;background:rgba(255,255,255,.58);box-shadow:inset 0 1px rgba(255,255,255,.85),0 4px 14px rgba(55,80,64,.03);transition:border-color .25s,box-shadow .25s,transform .25s}
+.auth-form input:not([type=checkbox]):focus{border-color:rgba(47,95,70,.52);box-shadow:0 0 0 4px rgba(47,95,70,.1),0 8px 24px rgba(55,80,64,.08);transform:translateY(-1px)}
+.auth-submit{position:relative;overflow:hidden;padding:19px;border-radius:12px;letter-spacing:-.02em}
+.auth-submit::before{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);transform:skewX(-20deg);transition:left .6s ease}
+.auth-submit:hover::before{left:125%}
+.auth-back{transition:transform .25s,background .25s}.auth-back:hover{transform:translateY(-2px);background:rgba(255,255,255,.7)}
+.auth-dots i{transition:width .3s ease,background .3s ease}.auth-shell:hover .auth-dots i.active{width:58px}

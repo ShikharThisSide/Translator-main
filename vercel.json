@@ -6,7 +6,9 @@
   "installCommand": "npm install",
   "rewrites": [
     { "source": "/translator", "destination": "/index.html" },
-    { "source": "/features", "destination": "/index.html" }
+    { "source": "/features", "destination": "/index.html" },
+    { "source": "/login", "destination": "/index.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "functions": {
     "api/**/*.js": {
