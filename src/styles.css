@@ -12,7 +12,7 @@ button, a { font: inherit; -webkit-tap-highlight-color: transparent; }
 .top-nav { position: fixed; z-index: 50; top: 18px; left: 0; right: 0; width: min(1280px, calc(100% - 120px)); margin: 0 auto; display: flex; align-items: center; gap: 12px; pointer-events: none; }
 .nav-logo { width: 54px; height: 54px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 50%; color: #111; background: rgba(247,247,247,.88); text-decoration: none; font-size: 16px; font-weight: 600; pointer-events: auto; backdrop-filter: blur(12px); }
 .logo-t { display: block; font-family: "Space Grotesk", Inter, sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -.14em; transform: scaleX(.78) skewX(-10deg); }
-.top-nav nav { flex: 1; display: flex; align-items: center; justify-content: space-around; padding: 16px 24px; border: 1px solid rgba(0,0,0,.05); border-radius: 19px; background: rgba(247,247,247,.82); box-shadow: 0 10px 28px rgba(0,0,0,.06); backdrop-filter: blur(16px); pointer-events: auto; }
+.top-nav nav { flex: 1; display: flex; align-items: center; justify-content: space-around; padding: 16px 24px; border: 1px solid rgba(0,0,0,.05); border-radius: 19px; background: rgba(247,247,247,.58); box-shadow: 0 10px 28px rgba(0,0,0,.06); backdrop-filter: blur(16px); pointer-events: auto; }
 .top-nav nav a { color: rgba(0,0,0,.72); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s ease; }
 .top-nav nav a:hover { color: #000; }
 .navbar { position: fixed; z-index: 50; top: 0; left: 0; right: 0; padding: 16px; display: flex; align-items: center; justify-content: space-between; pointer-events: none; }
@@ -104,15 +104,18 @@ h1 { margin: 10px 0 20px; font-size: clamp(2rem, 8vw, 4.5rem); font-weight: 300;
 .story-block:not(.universe) { color: #111; background: #f3f4f1; border-bottom: 0; }
 .story-block.why { background: linear-gradient(to bottom, #07090c 0%, #202725 7%, #69736e 15%, #cbd1cd 24%, #f3f4f1 34%); }
 .story-block.why { position: relative; isolation: isolate; }
-.story-block.why::after { content: ""; position: absolute; right: 10%; top: 42%; width: 360px; height: 360px; border-radius: 50%; background: radial-gradient(circle, rgba(140,255,193,.18), transparent 68%); filter: blur(18px); pointer-events: none; z-index: -1; }
-.story-block.why::before { content: ""; position: absolute; right: 7%; top: 36%; width: 430px; height: 430px; border: 1px solid rgba(71,123,96,.18); border-radius: 50%; box-shadow: 0 0 0 34px rgba(71,123,96,.045), 0 0 0 70px rgba(71,123,96,.025); animation: orbit-pulse 8s ease-in-out infinite; pointer-events: none; z-index: -1; }
+.story-block.why::after { content: "こんにちは  ·  Hello"; position: absolute; right: 3%; top: 68%; padding: 9px 12px; border: 1px solid rgba(71,123,96,.25); border-radius: 999px; color: #477b60; background: rgba(243,244,241,.92); font: 500 11px Inter, sans-serif; letter-spacing: .08em; opacity: 0; transform: translateY(8px) scale(.96); transition: opacity .35s ease, transform .35s ease; pointer-events: none; z-index: 2; }
+.story-block.why:hover::after { opacity: 0; transform: translateY(8px) scale(.96); }
+.meaning-anchor { position: absolute; right: 9%; top: 28%; width: 440px; height: 360px; cursor: help; z-index: 1; }
+.story-block.why:has(.meaning-anchor:hover)::after { opacity: 1; transform: translateY(0) scale(1); }
+.story-block.why::before { content: "こんにちは"; position: absolute; right: 9%; top: 28%; display: grid; place-items: center; width: 440px; height: 360px; color: rgba(28,42,35,.86); font-family: Georgia, "Times New Roman", serif; font-size: clamp(5rem, 11vw, 10rem); font-weight: 700; letter-spacing: -.12em; text-shadow: 18px 20px 0 rgba(71,123,96,.08); filter: drop-shadow(0 0 24px rgba(140,255,193,.13)); animation: glyph-float 7s ease-in-out infinite; pointer-events: none; z-index: -1; }
 .story-block.why h2 { max-width: 760px; font-size: clamp(3.6rem, 7.2vw, 7.2rem); line-height: .86; text-wrap: balance; }
 .story-block.why h2 em { background: linear-gradient(105deg, #8b9790 12%, #477b60 52%, #9aa69f 92%, #477b60 130%); background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: text-shimmer 7s linear infinite; }
 .story-block.why p { max-width: 390px; padding-left: 16px; border-left: 2px solid rgba(71,123,96,.45); }
 .story-block.why .scenario-row { display: none; }
 .story-block.why .scenario-row span { transition: transform .35s cubic-bezier(.16,1,.3,1), background .35s ease, color .35s ease; }
 .story-block.why .scenario-row span:hover { transform: translateY(-7px) rotate(-2deg); color: #f3f4f1; background: #477b60; border-color: #477b60; }
-@keyframes orbit-pulse { 0%, 100% { transform: scale(.94) rotate(0deg); opacity: .55; } 50% { transform: scale(1.04) rotate(12deg); opacity: 1; } }
+@keyframes glyph-float { 0%, 100% { transform: translateY(8px) rotate(-2deg); } 50% { transform: translateY(-10px) rotate(2deg); } }
 @keyframes text-shimmer { to { background-position: -220% center; } }
 .story-block:not(.universe) small { color: #477b60; font-size: 11px; letter-spacing: .16em; }
 .story-block:not(.universe) h2 em { color: #8c9690; }
