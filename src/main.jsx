@@ -5,6 +5,7 @@ import { ArrowLeftRight, Check, Copy, Download, FileText, Heart, Link2, Mic, Vol
 import React from "react";
 import "./styles.css";
 import "./login-polish.css";
+import "./features-polish.css";
 
 const EASE = [0.16, 1, 0.3, 1];
 
@@ -18,24 +19,261 @@ function TopNav() {
   return <motion.header className="top-nav" initial={{ y: -16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, ease: EASE }}><a className="nav-logo" href="/" aria-label="Home"><span className="logo-t">T</span></a><nav><a href="/translator">Translator</a><a href="/features">Features</a><a href="/#universe">About</a>{account ? <span className="account-nav"><a href="/translator" className="account-name" title={account.email}>{account.email?.split("@")[0] || "Account"}</a><button type="button" onClick={logout}>Log out</button></span> : <a href="/login">Login</a>}</nav></motion.header>;
 }
 
+const FEAT_FLOAT_WORDS = [
+  { text: "Bonjour", top: "18%", left: "4%", dur: "13s", delay: "0s", tx: "20px", ty: "-18px" },
+  { text: "Hola", top: "32%", left: "88%", dur: "11s", delay: "-2s", tx: "-18px", ty: "-24px" },
+  { text: "नमस्ते", top: "72%", left: "6%", dur: "15s", delay: "-4s", tx: "14px", ty: "16px" },
+  { text: "你好", top: "82%", left: "82%", dur: "12s", delay: "-1s", tx: "-12px", ty: "-10px" },
+];
+
+const FEAT_MARQUEE = ["English", "Hindi", "Spanish", "French", "Japanese", "Arabic", "Portuguese", "Korean", "German", "Chinese", "Italian", "Russian"];
+
+const FEAT_MORPH_PAIRS = [
+  ["Hello", "Bonjour"],
+  ["Travel", "Viajar"],
+  ["Connect", "つながる"],
+];
+
+function FeaturesAmbient() {
+  return (
+    <div className="features-ambient" aria-hidden="true">
+      {FEAT_FLOAT_WORDS.map((w) => (
+        <span key={w.text} className="feat-float-word" style={{ top: w.top, left: w.left, "--dur": w.dur, "--delay": w.delay, "--tx": w.tx, "--ty": w.ty }}>{w.text}</span>
+      ))}
+      {[22, 48, 74].map((top, i) => (
+        <div key={i} className="feat-mesh-line" style={{ top: `${top}%`, left: `${10 + i * 12}%`, width: `${30 + i * 10}%`, animationDelay: `${i * 2.2}s` }} />
+      ))}
+    </div>
+  );
+}
+
+function FeatureStoryCard({ className, children, delay = 0 }) {
+  return (
+    <motion.article
+      className={`story-card ${className}`}
+      initial={{ opacity: 0, y: 70, scale: 0.97 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.85, delay, ease: EASE }}
+    >
+      {children}
+    </motion.article>
+  );
+}
+
 function Details() {
   const authenticated = Boolean(window.localStorage.getItem("translixor-auth"));
-  const featureTrackRef = React.useRef(null);
+  const [morphIdx, setMorphIdx] = React.useState(0);
+  const [morphFlip, setMorphFlip] = React.useState(false);
   React.useEffect(() => {
-    const track = featureTrackRef.current;
-    if (!track) return;
-    const handleWheel = (event) => {
-      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX) || track.scrollWidth <= track.clientWidth) return;
-      const atStart = track.scrollLeft <= 0 && event.deltaY < 0;
-      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1 && event.deltaY > 0;
-      if (!atStart && !atEnd) { event.preventDefault(); track.scrollBy({ left: event.deltaY, behavior: "smooth" }); }
-    };
-    track.addEventListener("wheel", handleWheel, { passive: false });
-    return () => track.removeEventListener("wheel", handleWheel);
+    const id = setInterval(() => setMorphFlip((v) => !v), 2600);
+    return () => clearInterval(id);
+  }, []);
+  React.useEffect(() => {
+    const id = setInterval(() => setMorphIdx((i) => (i + 1) % FEAT_MORPH_PAIRS.length), 5200);
+    return () => clearInterval(id);
   }, []);
   const openFeature = () => { window.location.href = authenticated ? "/translator" : "/login?redirect=/translator"; };
-  const capabilities = [["01", "Text intelligence", "Translate Hinglish, slang, and nuanced sentences with context-aware output."], ["02", "Voice interface", "Speak naturally with voice input and listen to translations aloud."], ["03", "Visual context", "Turn screenshots and images into understandable translated text."], ["04", "Document translation", "Upload PDFs and keep longer documents moving with their meaning intact."], ["05", "Smart writing", "Polish grammar, tone, and clarity before you send a message."], ["06", "Language workspace", "Save, copy, download, share, and re-translate from one focused workspace."]];
-  return <section className="features-scroll-page"><div className="features-intro"><span className="feature-index">01 / TRANSLIXOR FEATURES</span><h1>Language,<br /><em>in motion.</em></h1><p>Scroll through the workspace and see how Translixor turns everyday language into clear, human conversation.</p></div><div ref={featureTrackRef} className="feature-track" aria-label="Translixor capabilities"><article className="story-card story-card-phone"><div className="story-card-copy"><span>01 / ASK ANYTHING</span><h2>Understand your words.<br /><em>Even when they change.</em></h2><p>Type naturally, mix Hinglish with English, and get a translation that preserves what you meant—not just what you wrote.</p><button onClick={openFeature}>{authenticated ? "Open translator" : "Try the workspace"} <span>↗</span></button></div><img src="/translator-phone-reference.png" alt="Translixor translation workspace shown on a phone" /></article><article className="story-card story-card-green"><div className="story-card-copy"><span>02 / IMAGE UPLOAD</span><h2>See the words.<br /><em>Understand more.</em></h2><p>Upload a photo, scan a document, or use your camera to extract and translate the text inside.</p><button onClick={openFeature}>Try image translation <span>↗</span></button></div><div className="story-orbit"><b>Camera</b><b>OCR</b><b>Translate</b><i>meaning<br />preserved</i></div></article><article className="story-card story-card-dark"><div className="story-card-copy"><span>03 / SEE THE CONTEXT</span><h2>From image to<br /><em>understanding.</em></h2><p>Upload a screenshot, scan a document, or bring a PDF. Translixor extracts the words and carries their context forward.</p><button onClick={openFeature}>Use visual translation <span>↗</span></button></div><div className="story-file-stack"><span>image.png</span><span>document.pdf</span><span>translated.txt</span></div></article></div><div className="features-followup"><span>04 / READY WHEN YOU ARE</span><h2>One workspace.<br /><em>Every conversation.</em></h2><p>Translation should help people move closer, not make them stop and think about language.</p><button onClick={openFeature}>{authenticated ? "Open workspace" : "Start translating"} <span>↗</span></button></div></section>;
+  const capabilities = [
+    ["01", "Text intelligence", "Translate Hinglish, slang, and nuanced sentences with context-aware output."],
+    ["02", "Voice interface", "Speak naturally with voice input and listen to translations aloud."],
+    ["03", "Visual context", "Turn screenshots and images into understandable translated text."],
+    ["04", "Document translation", "Upload PDFs and keep longer documents moving with their meaning intact."],
+    ["05", "Smart writing", "Polish grammar, tone, and clarity before you send a message."],
+    ["06", "Language workspace", "Save, copy, download, share, and re-translate from one focused workspace."],
+  ];
+  const [from, to] = FEAT_MORPH_PAIRS[morphIdx];
+  return (
+    <section className="features-scroll-page">
+      <FeaturesAmbient />
+      <div className="feat-marquee-wrap" aria-hidden="true">
+        <div className="feat-marquee-track">
+          {[...FEAT_MARQUEE, ...FEAT_MARQUEE].map((lang, i) => <span key={`${lang}-${i}`}>{lang}</span>)}
+        </div>
+      </div>
+      <motion.div className="features-intro" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: EASE }}>
+        <span className="feature-index"><span className="feat-index-dot" /> 01 / TRANSLIXOR FEATURES</span>
+        <h1>Language,<br /><em>in motion.</em></h1>
+        <p>Scroll through the workspace and see how Translixor turns everyday language into clear, human conversation.</p>
+        <div className="feat-live-translate">
+          <small>Live translate</small>
+          <motion.b key={`${morphIdx}-${morphFlip}`} initial={{ opacity: 0, y: 8, filter: "blur(4px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.4 }}>{morphFlip ? to : from}</motion.b>
+          <i>→</i>
+          <motion.b key={`${morphIdx}-${morphFlip}-b`} initial={{ opacity: 0, y: 8, filter: "blur(4px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.4, delay: 0.1 }}>{morphFlip ? from : to}</motion.b>
+        </div>
+      </motion.div>
+      <div className="feature-track" aria-label="Translixor capabilities">
+        <FeatureStoryCard className="story-card-green" delay={0.1}>
+          <div className="story-card-copy">
+            <span>02 / IMAGE UPLOAD</span>
+            <h2>See the words.<br /><em>Understand more.</em></h2>
+            <p>Upload a photo, scan a document, or use your camera to extract and translate the text inside.</p>
+            <button type="button" onClick={openFeature}>Try image translation <span>↗</span></button>
+          </div>
+          <div className="story-orbit"><b>Camera</b><b>OCR</b><b>Translate</b><i>meaning<br />preserved</i></div>
+        </FeatureStoryCard>
+        <FeatureStoryCard className="story-card-phone" delay={0.2}>
+          <div className="story-card-copy">
+            <span>01 / ASK ANYTHING</span>
+            <h2>Understand your words.<br /><em>Even when they change.</em></h2>
+            <p>Type naturally, mix Hinglish with English, and get a translation that preserves what you meant—not just what you wrote.</p>
+            <button type="button" onClick={openFeature}>{authenticated ? "Open translator" : "Try the workspace"} <span>↗</span></button>
+          </div>
+          <motion.img src="/translator-phone-reference.png" alt="Translixor translation workspace shown on a phone" initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.3, ease: EASE }} />
+        </FeatureStoryCard>
+        <FeatureStoryCard className="story-card-dark" delay={0.3}>
+          <div className="story-card-copy">
+            <span>03 / SEE THE CONTEXT</span>
+            <h2>From image to<br /><em>understanding.</em></h2>
+            <p>Upload a screenshot, scan a document, or bring a PDF. Translixor extracts the words and carries their context forward.</p>
+            <button type="button" onClick={openFeature}>Use visual translation <span>↗</span></button>
+          </div>
+          <motion.div className="story-file-stack" initial={{ opacity: 0, rotate: -14, x: 30 }} whileInView={{ opacity: 1, rotate: -8, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.4, ease: EASE }}>
+            <span>image.png</span><span>document.pdf</span><span>translated.txt</span>
+          </motion.div>
+        </FeatureStoryCard>
+      </div>
+      <div className="feat-capabilities">
+        <motion.div className="feat-capabilities-head" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: EASE }}>
+          <span>04 / FULL CAPABILITY SET</span>
+          <h3>Everything language needs.</h3>
+        </motion.div>
+        <div className="feat-cap-grid">
+          {capabilities.map(([num, title, copy], i) => (
+            <motion.button
+              key={num}
+              type="button"
+              className="feat-cap-tile"
+              onClick={openFeature}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, delay: i * 0.08, ease: EASE }}
+              whileHover={{ y: -6 }}
+            >
+              <b>{num}</b>
+              <h4>{title}</h4>
+              <p>{copy}</p>
+              <span className="feat-cap-arrow">↗</span>
+            </motion.button>
+          ))}
+        </div>
+      </div>
+      <motion.div className="features-followup" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.85, ease: EASE }}>
+        <span>05 / READY WHEN YOU ARE</span>
+        <h2>One workspace.<br /><em>Every conversation.</em></h2>
+        <p>Translation should help people move closer, not make them stop and think about language.</p>
+        <button type="button" onClick={openFeature}>{authenticated ? "Open workspace" : "Start translating"} <span>↗</span></button>
+        <div className="feat-cta-wave" aria-hidden="true">
+          {Array.from({ length: 12 }, (_, i) => <i key={i} style={{ height: `${14 + (i % 4) * 10}px`, "--i": i }} />)}
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+const AUTH_SLIDES = [
+  { kicker: "TRANSLIXOR · LANGUAGE, UNDERSTOOD", headline: <>Turn every<br /><em>conversation</em><br />into connection.</>, from: "Hello", to: "Bonjour" },
+  { kicker: "VOICE · TEXT · VISION", headline: <>Speak in one tongue.<br /><em>Be heard</em><br />in every language.</>, from: "नमस्ते", to: "Hello" },
+  { kicker: "CONTEXT · MEANING · CLARITY", headline: <>Words that travel.<br /><em>Meaning</em><br />that stays.</>, from: "こんにちは", to: "Hola" },
+];
+
+const AUTH_FLOAT_WORDS = [
+  { text: "Bonjour", top: "12%", left: "8%", dur: "11s", delay: "0s", tx: "18px", ty: "-24px" },
+  { text: "Hola", top: "22%", left: "72%", dur: "13s", delay: "-2s", tx: "-22px", ty: "-18px" },
+  { text: "नमस्ते", top: "58%", left: "6%", dur: "10s", delay: "-4s", tx: "14px", ty: "20px" },
+  { text: "Ciao", top: "68%", left: "78%", dur: "12s", delay: "-1s", tx: "-16px", ty: "12px" },
+  { text: "مرحبا", top: "38%", left: "88%", dur: "14s", delay: "-3s", tx: "-20px", ty: "-28px" },
+  { text: "你好", top: "78%", left: "42%", dur: "9s", delay: "-5s", tx: "10px", ty: "-14px" },
+];
+
+const AUTH_ORBIT_NODES = [
+  { label: "EN", angle: 0 },
+  { label: "FR", angle: 60 },
+  { label: "ES", angle: 120 },
+  { label: "HI", angle: 180 },
+  { label: "JA", angle: 240 },
+  { label: "AR", angle: 300 },
+];
+
+function AuthAmbient() {
+  return (
+    <div className="auth-ambient" aria-hidden="true">
+      {[18, 42, 68, 85].map((top, i) => (
+        <div key={i} className="auth-mesh-line" style={{ top: `${top}%`, left: `${5 + i * 8}%`, width: `${28 + i * 12}%`, animationDelay: `${i * 1.8}s` }} />
+      ))}
+    </div>
+  );
+}
+
+function AuthVisualPanel({ slideIndex, setSlideIndex }) {
+  const slide = AUTH_SLIDES[slideIndex];
+  const [morphOn, setMorphOn] = React.useState(false);
+  const parallaxX = useSpring(useMotionValue(0), { stiffness: 60, damping: 20 });
+  const parallaxY = useSpring(useMotionValue(0), { stiffness: 60, damping: 20 });
+  const onMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 24;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 16;
+    parallaxX.set(x);
+    parallaxY.set(y);
+  };
+  const onLeave = () => { parallaxX.set(0); parallaxY.set(0); };
+  React.useEffect(() => {
+    const id = setInterval(() => setMorphOn((v) => !v), 2800);
+    return () => clearInterval(id);
+  }, [slideIndex]);
+  React.useEffect(() => {
+    const id = setInterval(() => setSlideIndex((i) => (i + 1) % AUTH_SLIDES.length), 6000);
+    return () => clearInterval(id);
+  }, [setSlideIndex]);
+  return (
+    <motion.div className="auth-visual" onPointerMove={onMove} onPointerLeave={onLeave} initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9, ease: EASE }}>
+      <div className="auth-visual-top">
+        <motion.a className="auth-logo" href="/" whileHover={{ scale: 1.06, rotate: -2 }} whileTap={{ scale: 0.96 }}>T</motion.a>
+        <motion.a className="auth-back" href="/" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>Back to website <span>→</span></motion.a>
+      </div>
+      <div className="auth-float-layer">
+        {AUTH_FLOAT_WORDS.map((w) => (
+          <span key={w.text} className="auth-float-word" style={{ top: w.top, left: w.left, "--dur": w.dur, "--delay": w.delay, "--tx": w.tx, "--ty": w.ty }}>{w.text}</span>
+        ))}
+      </div>
+      <motion.div className="auth-orbit-scene" style={{ x: parallaxX, y: parallaxY }}>
+        <div className="auth-orbit-ring" />
+        <div className="auth-orbit-ring" />
+        <div className="auth-orbit-ring" />
+        <div className="auth-orbit-core" />
+        <motion.div className="auth-orbit-track" animate={{ rotate: 360 }} transition={{ duration: 32, repeat: Infinity, ease: "linear" }}>
+          {AUTH_ORBIT_NODES.map(({ label, angle }) => {
+            const rad = (angle * Math.PI) / 180;
+            const x = Math.cos(rad) * 170;
+            const y = Math.sin(rad) * 170;
+            return (
+              <motion.span key={label} className="auth-lang-node" style={{ transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))` }} animate={{ rotate: -360 }} transition={{ duration: 32, repeat: Infinity, ease: "linear" }}>{label}</motion.span>
+            );
+          })}
+        </motion.div>
+      </motion.div>
+      <div className="auth-waveform" aria-hidden="true">
+        {Array.from({ length: 14 }, (_, i) => <i key={i} style={{ height: `${12 + (i % 5) * 8}px`, "--i": i }} />)}
+      </div>
+      <div className="auth-visual-copy">
+        <motion.small key={slide.kicker} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>{slide.kicker}</motion.small>
+        <motion.h1 key={slideIndex} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }}>{slide.headline}</motion.h1>
+        <div className="auth-morph-line">
+          <span className="auth-morph-label">Live translate</span>
+          <motion.span className="auth-morph-word" key={`${slideIndex}-${morphOn}`} initial={{ opacity: 0, y: 10, filter: "blur(6px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.45 }}>{morphOn ? slide.to : slide.from}</motion.span>
+          <span className="auth-morph-arrow">→</span>
+          <motion.span className="auth-morph-word" key={`${slideIndex}-${morphOn}-b`} initial={{ opacity: 0, y: 10, filter: "blur(6px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.45, delay: 0.12 }}>{morphOn ? slide.from : slide.to}</motion.span>
+        </div>
+        <div className="auth-dots">
+          {AUTH_SLIDES.map((_, i) => (
+            <i key={i} className={i === slideIndex ? "active" : ""} onClick={() => setSlideIndex(i)} role="button" tabIndex={0} aria-label={`Slide ${i + 1}`} onKeyDown={(e) => e.key === "Enter" && setSlideIndex(i)} />
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
 }
 
 function AuthPage() {
@@ -45,8 +283,85 @@ function AuthPage() {
   const [otp, setOtp] = React.useState("");
   const [otpToken, setOtpToken] = React.useState("");
   const [status, setStatus] = React.useState("");
-  const submit = async (event) => { event.preventDefault(); setStatus(""); try { const endpoint = otpSent ? "/api/auth/verify-otp" : "/api/auth/send-otp"; const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, otp, token: otpToken }) }); const raw = await response.text(); let data = {}; try { data = raw ? JSON.parse(raw) : {}; } catch { data = { error: "The authentication service returned an invalid response." }; } if (!response.ok) throw new Error(data.error || "Unable to continue."); if (!otpSent) { setOtpToken(data.token || ""); setOtpSent(true); setStatus("We sent a 6-digit code to your email."); } else { window.localStorage.setItem("translixor-auth", JSON.stringify({ email })); window.location.href = new URLSearchParams(window.location.search).get("redirect") || "/"; } } catch (error) { setStatus(error.message); } };
-  return <main className="auth-page"><div className="auth-shell"><div className="auth-visual"><a className="auth-logo" href="/">T</a><a className="auth-back" href="/">Back to website <span>→</span></a><div className="auth-visual-copy"><small>TRANSLIXOR · LANGUAGE, UNDERSTOOD</small><h1>Turn every<br /><em>conversation</em><br />into connection.</h1><div className="auth-dots"><i /><i /><i className="active" /></div></div></div><div className="auth-form-wrap"><div className="auth-form"><p className="auth-kicker">TEXT · VOICE · VISION</p><h2>{otpSent ? "Verify your email" : mode === "signup" ? "Create an account" : "Welcome back"}</h2><p className="auth-switch">{otpSent ? `Enter the code sent to ${email}` : mode === "signup" ? "Already have an account?" : "Need an account?"} {!otpSent && <button type="button" onClick={() => setMode(mode === "signup" ? "login" : "signup")}>{mode === "signup" ? "Log in" : "Create one"}</button>}</p><form onSubmit={submit}>{!otpSent && mode === "signup" && <input placeholder="Your name" required />}<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Email" required disabled={otpSent} />{!otpSent && <input type="password" placeholder="Enter your password" required />} {otpSent && <input inputMode="numeric" pattern="[0-9]{6}" maxLength="6" value={otp} onChange={(event) => setOtp(event.target.value.replace(/\D/g, ""))} placeholder="6-digit code" required />} {!otpSent && <label className="terms"><input type="checkbox" required /> <span>I agree to the <u>Terms & Conditions</u></span></label>}<button className="auth-submit" type="submit">{otpSent ? "Verify code" : mode === "signup" ? "Create account" : "Log in"} <span>→</span></button>{status && <small className="auth-status">{status}</small>}</form></div></div></div></main>;
+  const [slideIndex, setSlideIndex] = React.useState(0);
+  const [statusError, setStatusError] = React.useState(false);
+  const submit = async (event) => {
+    event.preventDefault();
+    setStatus("");
+    setStatusError(false);
+    try {
+      const endpoint = otpSent ? "/api/auth/verify-otp" : "/api/auth/send-otp";
+      const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, otp, token: otpToken }) });
+      const raw = await response.text();
+      let data = {};
+      try { data = raw ? JSON.parse(raw) : {}; } catch { data = { error: "The authentication service returned an invalid response." }; }
+      if (!response.ok) throw new Error(data.error || "Unable to continue.");
+      if (!otpSent) {
+        setOtpToken(data.token || "");
+        setOtpSent(true);
+        setStatus("We sent a 6-digit code to your email.");
+      } else {
+        window.localStorage.setItem("translixor-auth", JSON.stringify({ email }));
+        window.location.href = new URLSearchParams(window.location.search).get("redirect") || "/";
+      }
+    } catch (error) {
+      setStatusError(true);
+      setStatus(error.message);
+    }
+  };
+  const formTitle = otpSent ? "Verify your email" : mode === "signup" ? "Create an account" : "Welcome back";
+  return (
+    <main className="auth-page">
+      <AuthAmbient />
+      <motion.div className="auth-shell" initial={{ opacity: 0, y: 32, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.85, ease: EASE }}>
+        <AuthVisualPanel slideIndex={slideIndex} setSlideIndex={setSlideIndex} />
+        <motion.div className="auth-form-wrap" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9, delay: 0.15, ease: EASE }}>
+          <div className="auth-form">
+            <motion.p className="auth-kicker" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+              <span className="auth-kicker-dot" /> TEXT · VOICE · VISION
+            </motion.p>
+            <motion.h2 key={formTitle} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>{formTitle}</motion.h2>
+            <motion.p className="auth-switch" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
+              {otpSent ? `Enter the code sent to ${email}` : mode === "signup" ? "Already have an account?" : "Need an account?"}
+              {!otpSent && <button type="button" onClick={() => { setMode(mode === "signup" ? "login" : "signup"); setStatus(""); }}>{mode === "signup" ? "Log in" : "Create one"}</button>}
+            </motion.p>
+            <form onSubmit={submit}>
+              {!otpSent && mode === "signup" && (
+                <motion.div className="auth-field" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}><input placeholder="Your name" required /></motion.div>
+              )}
+              <motion.div className="auth-field" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required disabled={otpSent} />
+              </motion.div>
+              {!otpSent && (
+                <motion.div className="auth-field" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+                  <input type="password" placeholder="Enter your password" required />
+                </motion.div>
+              )}
+              {otpSent && (
+                <motion.div className="auth-field" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+                  <input inputMode="numeric" pattern="[0-9]{6}" maxLength="6" value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))} placeholder="6-digit code" required autoFocus />
+                </motion.div>
+              )}
+              {!otpSent && (
+                <motion.label className="terms" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}>
+                  <input type="checkbox" required /> <span>I agree to the <u>Terms & Conditions</u></span>
+                </motion.label>
+              )}
+              <motion.button className="auth-submit" type="submit" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}>
+                {otpSent ? "Verify code" : mode === "signup" ? "Create account" : "Log in"} <span>→</span>
+              </motion.button>
+              {status && <motion.small className={`auth-status${statusError ? " error" : ""}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>{status}</motion.small>}
+            </form>
+            <motion.div className="auth-feature-pills" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.75 }}>
+              <span>🌐 40+ languages</span>
+              <span>🎙 Voice input</span>
+              <span>📷 Image OCR</span>
+            </motion.div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </main>
+  );
 }
 
 function TranslatorPage() {
