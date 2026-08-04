@@ -350,7 +350,6 @@
 .story-card-green::after {
   mix-blend-mode: normal !important;
   opacity: 0.95;
-}
   position: absolute;
   right: 0;
   bottom: 0;
